@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jharkhand B.Ed EE Full Mock Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+</head>
+<body>
+    <!-- Start Screen -->
+    <div id="start-screen" class="start-screen">
+        <div class="start-container">
+            <h1>Jharkhand B.Ed Mock Test</h1>
+            <div class="instructions">
+                <h2>Instructions</h2>
+                <ol>
+                    <li>This test contains 100 multiple-choice questions.</li>
+                    <li>Total duration of the test is 90 minutes.</li>
+                    <li>There is a negative marking of 1/4 mark for each incorrect answer.</li>
+                    <li>Use "Mark for Review" to flag questions you want to revisit.</li>
+                    <li>You can navigate between questions using Previous/Next buttons or jump to specific questions.</li>
+                    <li>The test will automatically submit when time expires.</li>
+                    <li>After submission, you'll get detailed analysis of your performance.</li>
+                </ol>
+                <div class="important-notes">
+                    <h3>Important Notes:</h3>
+                    <ul>
+                        <li>Do not refresh the page during the test.</li>
+                        <li>The test will open in full-screen mode.</li>
+                        <li>Ensure you have a stable internet connection.</li>
+                        <li>All questions are based on the latest Jharkhand B.Ed EE syllabus.</li>
+                    </ul>
+                </div>
+
+
+
+<div class="candidate-info-card">
+  <div class="card-header">
+    <svg class="user-icon" viewBox="0 0 24 24">
+      <path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/>
+    </svg>
+    <h3>Candidate Information</h3>
+  </div>
+  <div class="card-body">
+    <div class="form-group floating-label">
+      <input type="text" id="candidate-name" required>
+      <label for="candidate-name">&nbsp; Your Full Name</label>
+      <div class="underline"></div>
+    </div>
+  </div>
+</div>
+
+            </div>
+
+
+            <div class="start-controls">
+                <button id="fullscreen-btn" class="btn btn-primary">Start Test (Full Screen)</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Test Container (initially hidden) -->
+    <div id="test-container" class="container" style="display:none;">
+        <header>
+            <h1>Jharkhand B.Ed Mock Test</h1>
+            <p>
+                Full-length practice test with detailed analysis (100 Questions)
+            </p>
+        </header>
+
+        <div class="test-info">
+            <div class="info-item">
+                <span>Total Questions</span>
+                <span class="value" id="total-questions">0</span>
+            </div>
+            <div class="info-item">
+                <span>Time Remaining</span>
+                <span class="value" id="timer">90:00</span>
+            </div>
+            <div class="info-item">
+                <span>Max Marks</span>
+                <span class="value" id="max-marks">0</span>
+            </div>
+        </div>
+
+        <div class="progress-container">
+            <div id="progress-bar"></div>
+            <span id="progress-text">0/100 (0%)</span>
+        </div>
+
+        <div class="question-jump">
+            <input type="number" id="jump-to-question" min="1" max="100" placeholder="Jump to question">
+            <button class="btn btn-secondary" onclick="jumpToQuestion()">Go</button>
+        </div>
+
+        <div id="quiz" class="question-container"></div>
+
+        <div class="navigation">
+            <button class="btn btn-secondary" id="prev-btn" onclick="navigate(-1)">Previous</button>
+            <span id="question-counter">Question 1 of 100</span>
+            <button class="btn btn-primary" id="next-btn" onclick="navigate(1)">Next</button>
+        </div>
+
+        <div class="test-controls">
+            <button class="btn btn-warning" onclick="markForReview()">Mark for Review</button>
+            <button class="btn btn-danger" id="submit-btn">Submit Test</button>
+        </div>
+
+        <div id="result-container" class="result-container">
+            <h2>Test Results</h2>
+            <div class="result-summary">
+                <div class="summary-item">
+                    <span class="label">Correct Answers:</span>
+                    <span class="value" id="correct-answers">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Incorrect Answers:</span>
+                    <span class="value" id="incorrect-answers">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Unattempted:</span>
+                    <span class="value" id="unattempted-answers">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Marked Questions:</span>
+                    <span class="value" id="marked-answers">0</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Percentage:</span>
+                    <span class="value" id="percentage">0%</span>
+                </div>
+                
+  <div class="summary-item">
+    <span class="label">Total Marks:</span>
+    <span class="value" id="total-marks">0</span>
+  </div>
+  <div class="summary-item">
+    <span class="label">Marks Percentage:</span>
+    <span class="value" id="marks-percentage">0%</span>
+  </div>
+
+            </div>
+
+            <div class="chart-container">
+                <canvas id="scoreChart"></canvas>
+            </div>
+
+            <h3>Section-wise Analysis</h3>
+            <table id="section-table">
+                <thead>
+                    <tr>
+                        <th>Section</th>
+                        <th>Total</th>
+                        <th>Correct</th>
+                        <th>Incorrect</th>
+                        <th>Unattempted</th>
+                        <th>Marks</th>
+                        <th>Accuracy</th>
+                        <th>Progress</th>
+                    </tr>
+                </thead>
+                <tbody id="section-table-body"></tbody>
+            </table>
+
+            <h3>Detailed Analysis</h3>
+            <div id="detailed-analysis"></div>
+">
+    <button class="btn btn-primary" id="restart-btn">Restart Test</button>
+            <button class="btn btn-success" onclick="exportPDF()">Download PDF Report</button>
+        </div>
+    </div>
+
+    <script src="questions.js"></script>
+    <script src="script.js"></script>
+
+    <script>
+        // Start screen and fullscreen initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Check if we're coming from start screen
+            const urlParams = new URLSearchParams(window.location.search);
+            const started = urlParams.get('started');
+
+            if (!started) {
+                // Show start screen
+                document.getElementById('start-screen').style.display = 'flex';
+                document.getElementById('test-container').style.display = 'none';
+
+                // Start test button handler
+                document.getElementById('fullscreen-btn').addEventListener('click', function() {
+                    // Set flag in URL
+                    window.history.pushState({}, '', '?started=true');
+
+                    // Hide start screen
+                    document.getElementById('start-screen').style.display = 'none';
+
+                    // Show test container
+                    const testContainer = document.getElementById('test-container');
+                    testContainer.style.display = 'block';
+
+                    // Request fullscreen
+                    if (testContainer.requestFullscreen) {
+                        testContainer.requestFullscreen().catch(err => {
+                            console.error('Error attempting to enable fullscreen:', err);
+                        });
+                    } else if (testContainer.webkitRequestFullscreen) {
+                        testContainer.webkitRequestFullscreen();
+                    } else if (testContainer.msRequestFullscreen) {
+                        testContainer.msRequestFullscreen();
+                    }
+                });
+            } else {
+                // Directly show test if coming with started param
+                document.getElementById('start-screen').style.display = 'none';
+                document.getElementById('test-container').style.display = 'block';
+            }
+
+            // Handle fullscreen change
+            document.addEventListener('fullscreenchange', exitHandler);
+            document.addEventListener('webkitfullscreenchange', exitHandler);
+            document.addEventListener('mozfullscreenchange', exitHandler);
+            document.addEventListener('MSFullscreenChange', exitHandler);
+        });
+
+        function exitHandler() {
+            if (!document.fullscreenElement &&
+                !document.webkitIsFullScreen &&
+                !document.mozFullScreen &&
+                !document.msFullscreenElement) {
+                // Show warning if test is in progress
+                if (typeof timerInterval !== 'undefined' && timerInterval !== null) {
+                    const warning = document.createElement('div');
+                    warning.className = 'fullscreen-warning';
+                    warning.textContent = 'Warning: You exited fullscreen mode. For best experience, please return to fullscreen.';
+                    warning.style.display = 'block';
+                    document.body.appendChild(warning);
+
+                    setTimeout(() => {
+                        warning.style.display = 'none';
+                        document.body.removeChild(warning);
+                    }, 5000);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
